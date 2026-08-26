@@ -4,6 +4,10 @@ import os
 
 BOOKS_FILE = "books.json"
 
+class LedgerError(Exception):
+    pass
+
+
 def get_initial_books():
     books = [
        {
@@ -73,17 +77,29 @@ def get_initial_books():
 def load_books():
     if not os.path.exists(BOOKS_FILE):
         books = get_initial_books()
+        save_books(books)
+        return books
 
-        with open(BOOKS_FILE, "w") as file:
-            json.dump(books, file, indent=4)
+    try:
+
+        with open(BOOKS_FILE, "r") as file:
+            books = json.load(file)
+
+        if not isinstance(books, list):
+            raise LedgerError("The saved ledger is corrupted.")    
 
         return books
 
-    with open(BOOKS_FILE, "r") as file:
-        books = json.load(file)
+    except(json.JSONDecodeError, OSError):
+        raise LedgerError ("The saved Ledger is corrupted.")
 
-    return books
 
 def save_books(books):
-    with open(BOOKS_FILE, "w") as file:
-        json.dump(books, file, indent=4)
+    try:
+        with open(BOOKS_FILE, "w") as file:
+            json.dump(books, file, indent=4)
+
+
+    except OSError:
+        raise LedgerError("The ledger could not be saved.")
+    
