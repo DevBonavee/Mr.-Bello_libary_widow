@@ -238,6 +238,9 @@ The storage system can also be tested by adding a book, closing the program, sta
 * Python 3
 * No external Python packages are required
 
+## WakeTime
+![wakatime](https://wakatime.com/badge/user/ef659702-16ce-4845-8090-eb022a245[7be/project/baf4f612-c459-4966-ad47-699781d5e8dd.svg)](https://wakatime.com/badge/user/ef659702-16ce-4845-8090-eb022a2457be/project/baf4f612-c459-4966-ad47-699781d5e8dd)
+
 ## Author
 Chukwuebuka Bonaventure
 Built as a backend development assignment focused on CRUD operations, authentication, authorisation, persistence, and clean project structure
