@@ -1,180 +1,95 @@
+[README.md](https://github.com/user-attachments/files/34973422/README.md)
+[README.md](https://github.com/user-attachments/files/34973515/README.md)
 # Mr. Bello's Library Window
 
-A simple Python backend for managing a library through a command-line interface.
-
-## Overview
-
-Mr. Bello's Library Window is a backend assignment built around a simple idea: users send requests through a library window, and the system processes each request and returns a response code.
-
-The project implements the four basic CRUD operations:
-
-* `GET` to view books
-* `POST` to add a new book
-* `PUT` to update an existing book
-* `DELETE` to remove a book
-
-It also includes user authentication, role-based permissions, persistent storage, input validation, error handling, and request logging.
+A Python command-line library management backend that processes text-based requests to manage books. The project demonstrates CRUD operations, user authentication, role-based permissions, persistent JSON storage, validation, error handling, and request logging.
 
 ## Features
 
-### Authentication
+- Authenticate authorised users with a username and password.
+- Lock a user out after three failed login attempts.
+- Support two roles: Member and Chief Librarian.
+- List all books, retrieve a specific book, and list borrowed books.
+- Add new books and update existing book details.
+- Restrict book deletion to the Chief Librarian.
+- Persist book records in `books.json`.
+- Create an initial set of ten books when the data file does not exist.
+- Detect and handle corrupted book data.
+- Log each request with its timestamp, username, request text, and response code.
 
-The system has six authorised users. Each user signs in with a username and password.
+## CRUD operations
 
-There are two user roles:
+| Operation | Request | Purpose |
+|---|---|---|
+| Read all | `GET books` | Display all books |
+| Read one | `GET book 4` | Display a specific book |
+| Read borrowed | `GET books borrowed` | Display borrowed books |
+| Create | `POST book` | Add a book |
+| Update | `PUT book 4` | Update a book |
+| Delete | `DELETE book 4` | Delete a book (Chief Librarian only) |
 
-* **Member**: Can view, add, and update books
-* **Chief Librarian**: Has all member permissions and can also delete books
+Each book contains an ID, title, author, and status. Status is either `on shelf` or `borrowed`.
 
-Users are locked out after three failed login attempts.
+## Roles and permissions
 
-### Book Management
+| Role | Permissions |
+|---|---|
+| Member | View, add, and update books |
+| Chief Librarian | All Member permissions, plus delete books |
 
-The system supports:
+The application locks an account after three unsuccessful login attempts.
 
-```text
-GET books
-GET book 4
-GET books borrowed
+## Response codes
 
-POST book
-PUT book 4
-DELETE book 4
-```
+| Code | Meaning |
+|---|---|
+| `200` | Request completed successfully |
+| `201` | A new book was created |
+| `400` | Invalid request |
+| `401` | User is not authenticated |
+| `403` | User is authenticated but lacks permission |
+| `404` | Requested book does not exist |
 
-Each book contains:
+## Tech stack
 
-* Book ID
-* Title
-* Author
-* Status
+- Python 3
+- JSON file storage
+- Python standard library
 
-A book can have either `on shelf` or `borrowed` as its status.
+No third-party Python packages are required.
 
-### Response Codes
-
-Every request returns a response code.
-
-| Code  | Meaning                                  |
-| ----- | ---------------------------------------- |
-| `200` | Request completed successfully           |
-| `201` | New book created                         |
-| `400` | Invalid request                          |
-| `401` | User is not authenticated                |
-| `403` | User is authenticated but not authorised |
-| `404` | Requested book does not exist            |
-
-### Persistent Storage
-
-Books are stored in `books.json`.
-
-The program creates the initial ten books automatically when the ledger does not exist. Changes made to the books are saved back to the file, so the data remains available after the program is closed and started again.
-
-The program also checks for a corrupted ledger and handles the problem without exposing a Python traceback to the user.
-
-### Request Logging
-
-Requests are recorded in `library.log`.
-
-Each log entry contains:
-
-* Date and time
-* Username
-* Request
-* Response code
-
-## Project Structure
+## Project structure
 
 ```text
-mr-bellos-library/
-│
-├── main.py
+Mr.-Bello_libary_widow/
+├── library/
+│   ├── __init__.py
+│   ├── auth.py
+│   ├── books.py
+│   ├── logger.py
+│   └── storage.py
 ├── books.json
-├── library.log
-│
-└── library/
-    ├── __init__.py
-    ├── auth.py
-    ├── books.py
-    ├── logger.py
-    └── storage.py
+├── main.py
+└── README.md
 ```
 
-### `main.py`
-
-Acts as the library window. It receives user requests, sends them to the appropriate function, and displays the response.
-
-### `auth.py`
-
-Handles the staff register, login verification, failed login attempts, account locking, and user roles.
-
-### `books.py`
-
-Contains the actual book operations. This is where books are retrieved, added, updated, and deleted.
-
-### `storage.py`
-
-Handles the library ledger. It creates the initial data, loads books from `books.json`, saves changes, and detects corrupted storage.
-
-### `logger.py`
-
-Records requests and their response codes in `library.log`.
-
-### `__init__.py`
-
-Marks the `library` directory as a Python package.
-
-## Getting Started
-
-### 1. Clone the repository
+## Getting started
 
 ```bash
-git clone <your-repository-url>
-cd <your-project-folder>
-```
-
-### 2. Run the application
-
-Make sure Python is installed, then run:
-
-```bash
+git clone https://github.com/DevBonavee/Mr.-Bello_libary_widow.git
+cd Mr.-Bello_libary_widow
 python main.py
 ```
 
-### 3. Sign in
+Sign in using one of the authorised accounts configured for the exercise. Do not reuse sample credentials in a real application.
 
-Use any of the authorised accounts:
+## Example session
 
-| Username      | Password      | Role            |
-| ------------- | ------------- | --------------- |
-| `mrs_okafor`  | `library2024` | Chief Librarian |
-| `bello_jr`    | `windowboy`   | Member          |
-| `amina_s`     | `books4life`  | Member          |
-| `tunde_reads` | `password123` | Member          |
-| `chichi_o`    | `novels!`     | Member          |
-| `baba_musa`   | `retired55`   | Member          |
-
-## Example Requests
-
-After signing in, you can use:
+After signing in, enter a request such as:
 
 ```text
 GET books
 ```
-
-to display all books.
-
-```text
-GET book 4
-```
-
-to display a specific book.
-
-```text
-GET books borrowed
-```
-
-to display only borrowed books.
 
 To add a book:
 
@@ -182,7 +97,7 @@ To add a book:
 POST book
 ```
 
-The program will ask for the title, author, and status.
+The program prompts for the book's title, author, and status.
 
 To update a book:
 
@@ -190,57 +105,26 @@ To update a book:
 PUT book 4
 ```
 
-The program will ask for the updated details.
-
 To delete a book:
 
 ```text
 DELETE book 4
 ```
 
-Only the Chief Librarian can perform this operation.
+Only a Chief Librarian account can complete the delete operation. Enter `exit` to close the program.
 
-Type:
+## How the code is organised
 
-```text
-exit
-```
+- `main.py` — receives requests and displays responses.
+- `auth.py` — handles login, failed attempts, account locking, and roles.
+- `books.py` — implements book retrieval and CRUD operations.
+- `storage.py` — loads and saves the JSON book ledger.
+- `logger.py` — records requests and response codes.
 
-to close the program.
+## Learning outcomes
 
-## Design Approach
-
-The project uses a simple separation of responsibilities.
-
-`main.py` handles interaction with the user. Authentication is handled by `auth.py`, book operations are handled by `books.py`, file operations are handled by `storage.py`, and logging is handled by `logger.py`.
-
-This keeps the project easier to understand, test, and maintain. It also means changes to one part of the application do not require putting unrelated logic into a single file.
-
-## Testing
-
-The application can be tested against the main requirements of the assignment:
-
-```text
-GET books              → 200
-GET existing book      → 200
-GET missing book       → 404
-Invalid request        → 400
-Unauthenticated user   → 401
-Member DELETE          → 403
-Chief Librarian DELETE → 200
-New book               → 201
-```
-
-The storage system can also be tested by adding a book, closing the program, starting it again, and checking that the book is still present.
-
-## Requirements
-
-* Python 3
-* No external Python packages are required
-
-## WakeTime
-![wakatime](https://wakatime.com/badge/user/ef659702-16ce-4845-8090-eb022a245[7be/project/baf4f612-c459-4966-ad47-699781d5e8dd.svg)](https://wakatime.com/badge/user/ef659702-16ce-4845-8090-eb022a2457be/project/baf4f612-c459-4966-ad47-699781d5e8dd)
+This project demonstrates separation of concerns, CRUD design, authentication, authorisation, file persistence, input validation, error handling, and audit-style logging.
 
 ## Author
-Chukwuebuka Bonaventure
-Built as a backend development assignment focused on CRUD operations, authentication, authorisation, persistence, and clean project structure
+
+Chukwuebuka Bonaventure — [@DevBonavee](https://github.com/DevBonavee)
